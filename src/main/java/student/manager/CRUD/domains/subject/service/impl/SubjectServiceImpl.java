@@ -77,8 +77,8 @@ public class SubjectServiceImpl implements SubjectService {
 
         subjectRepository.getReferenceById(id).setName(request.getNewName());
         subjectRepository.getReferenceById(id).setCredits(request.getNewCredits());
-        subjectRepository.getReferenceById(id).setTeacherId(request.getNewTeacherId());
-        subjectRepository.getReferenceById(id).setClassId(request.getNewClassId());
+//        subjectRepository.getReferenceById(id).setTeacherId(request.getNewTeacherId());
+//        subjectRepository.getReferenceById(id).setClassId(request.getNewClassId());
         subjectRepository.flush();
         return "Change Information Success !";
     }

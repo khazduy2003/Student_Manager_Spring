@@ -1,4 +1,4 @@
-package student.manager.CRUD.domains.classs.model.request;
+package student.manager.CRUD.domains.classes.model.request;
 
 import lombok.Data;
 

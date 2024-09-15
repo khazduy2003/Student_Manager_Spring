@@ -51,15 +51,15 @@ public class ScoreServiceImpl implements ScoreService {
         if (scoreRepository.existsByStudentId(request.getStudentId())) {
             checkStudent=false;
         }
-        if (!checkStudent) {
-            List<Score> tempList = scoreRepository.findAllByStudentId(request.getStudentId());
-            for (Score score : tempList) {
-                if (score.getSubjectId().equals(request.getSubjectId())) {
-                    checkSubject = false;
-                    break;
-                }
-            }
-        }
+//        if (!checkStudent) {
+//            List<Score> tempList = scoreRepository.findAllByStudentId(request.getStudentId());
+//            for (Score score : tempList) {
+//                if (score.getSubjectId().equals(request.getSubjectId())) {
+//                    checkSubject = false;
+//                    break;
+//                }
+//            }
+//        }
         if (!checkSubject) {
             throw new RegisterSubjectException("Duplicate StudentID and SubjectID");
         }
@@ -80,12 +80,12 @@ public class ScoreServiceImpl implements ScoreService {
             throw new ScoreException("Invalid StudentID or SubjectID");
         }
 
-        for (Score score : scoreRepository.findAll()) {
-            if (score.getStudentId().equals(studentId) && score.getSubjectId().equals(subjectId)) {
-                check=true;
-                break;
-            }
-        }
+//        for (Score score : scoreRepository.findAll()) {
+//            if (score.getStudentId().equals(studentId) && score.getSubjectId().equals(subjectId)) {
+//                check=true;
+//                break;
+//            }
+//        }
         if (!check) {
             throw new ScoreException("Incorrect StudentID or SubjectID");
         }
@@ -114,8 +114,8 @@ public class ScoreServiceImpl implements ScoreService {
             throw new TeacherException("Invalid StudentID, SubjectID or Score");
         }
 
-        scoreRepository.getReferenceById(id).setStudentId(request.getNewStudentId());
-        scoreRepository.getReferenceById(id).setSubjectId(request.getNewSubjectId());
+//        scoreRepository.getReferenceById(id).setStudentId(request.getNewStudentId());
+//        scoreRepository.getReferenceById(id).setSubjectId(request.getNewSubjectId());
         scoreRepository.getReferenceById(id).setScore(request.getNewScore());
         scoreRepository.flush();
         return "Changed Information Success";

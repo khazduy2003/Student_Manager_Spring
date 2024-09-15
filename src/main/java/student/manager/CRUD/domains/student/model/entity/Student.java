@@ -19,14 +19,10 @@ public class Student extends BaseEntity {
 
     @Column
     private String name;
-
     @Column
     private Date dob;
-
     @Column
     private String address;
-
-    // OneToMany relationship with Score
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Score> scoreList;

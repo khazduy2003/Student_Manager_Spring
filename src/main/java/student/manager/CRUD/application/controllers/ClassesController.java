@@ -2,33 +2,29 @@ package student.manager.CRUD.application.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import student.manager.CRUD.domains.classs.model.entity.Classs;
-import student.manager.CRUD.domains.classs.model.request.ChangeClassRequest;
-import student.manager.CRUD.domains.classs.model.request.ClassRequest;
-import student.manager.CRUD.domains.classs.service.ClassService;
-import student.manager.CRUD.domains.subject.model.entity.Subject;
-import student.manager.CRUD.domains.subject.model.request.ChangeSubjectRequest;
-import student.manager.CRUD.domains.subject.model.request.SubjectRequest;
-import student.manager.CRUD.domains.subject.service.SubjectService;
+import student.manager.CRUD.domains.classes.model.entity.Classes;
+import student.manager.CRUD.domains.classes.model.request.ChangeClassRequest;
+import student.manager.CRUD.domains.classes.model.request.ClassRequest;
+import student.manager.CRUD.domains.classes.service.ClassService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/class")
-public class ClasssController {
+public class ClassesController {
 
     @Autowired
     private ClassService classService;
 
     // get by id
     @GetMapping("/{id}")
-    public Classs getById(@PathVariable Long id) {
+    public Classes getById(@PathVariable Long id) {
         return classService.getById(id);
     }
 
     // get all
     @GetMapping("/all")
-    public List<Classs> getAll() {
+    public List<Classes> getAll() {
         return classService.getAll();
     }
 

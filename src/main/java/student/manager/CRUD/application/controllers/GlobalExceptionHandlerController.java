@@ -4,8 +4,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import student.manager.CRUD.application.exceptions.*;
-import student.manager.CRUD.domains.classs.model.entity.Classs;
-import student.manager.CRUD.domains.score.model.entity.Score;
 
 @ControllerAdvice
 public class GlobalExceptionHandlerController {

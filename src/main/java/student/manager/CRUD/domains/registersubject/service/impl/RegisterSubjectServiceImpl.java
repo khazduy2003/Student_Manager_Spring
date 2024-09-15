@@ -31,15 +31,15 @@ public class RegisterSubjectServiceImpl implements RegisterSubjectService {
         if (registerSubjectRepository.existsByStudentId(request.getStudentId())) {
             checkStudent=false;
         }
-        if (!checkStudent) {
-            List<RegisterSubject> tempList = registerSubjectRepository.findRegisterSubjectByStudentId(request.getStudentId());
-            for (RegisterSubject registerSubject : tempList) {
-                if (registerSubject.getSubjectId().equals(request.getSubjectId())) {
-                    checkSubject = false;
-                    break;
-                }
-            }
-        }
+//        if (!checkStudent) {
+//            List<RegisterSubject> tempList = registerSubjectRepository.findRegisterSubjectByStudentId(request.getStudentId());
+//            for (RegisterSubject registerSubject : tempList) {
+//                if (registerSubject.getSubjectId().equals(request.getSubjectId())) {
+//                    checkSubject = false;
+//                    break;
+//                }
+//            }
+//        }
         if (!checkSubject) {
             throw new RegisterSubjectException("Duplicate RegisterSubject");
         }

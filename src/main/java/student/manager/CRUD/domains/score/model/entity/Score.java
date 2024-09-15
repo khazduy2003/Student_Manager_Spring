@@ -17,12 +17,6 @@ import java.time.LocalDate;
 @Data
 public class Score extends BaseEntity {
 
-    @Column(name = "student_id")
-    private Long studentId;
-
-    @Column(name = "subject_id")
-    private Long subjectId;
-
     @Column(name = "score")
     private BigDecimal score;
 
@@ -40,8 +34,6 @@ public class Score extends BaseEntity {
     private Subject subject;
 
     public Score(Long studentId, Long subjectId, BigDecimal score, LocalDate date) {
-        this.studentId=studentId;
-        this.subjectId=subjectId;
         this.score=score;
         this.date=date;
     }

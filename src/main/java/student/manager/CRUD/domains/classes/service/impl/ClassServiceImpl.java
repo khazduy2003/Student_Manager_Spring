@@ -1,25 +1,24 @@
-package student.manager.CRUD.domains.classs.service.impl;
+package student.manager.CRUD.domains.classes.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import student.manager.CRUD.application.exceptions.ClassException;
 import student.manager.CRUD.application.exceptions.TeacherException;
-import student.manager.CRUD.domains.classs.model.entity.Classs;
-import student.manager.CRUD.domains.classs.model.request.ChangeClassRequest;
-import student.manager.CRUD.domains.classs.model.request.ClassRequest;
-import student.manager.CRUD.domains.classs.repository.ClassRepository;
-import student.manager.CRUD.domains.classs.service.ClassService;
-import student.manager.CRUD.domains.subject.model.request.SubjectRequest;
+import student.manager.CRUD.domains.classes.model.entity.Classes;
+import student.manager.CRUD.domains.classes.model.request.ChangeClassRequest;
+import student.manager.CRUD.domains.classes.model.request.ClassRequest;
+import student.manager.CRUD.domains.classes.repository.ClassRepository;
+import student.manager.CRUD.domains.classes.service.ClassService;
 
 import java.util.List;
 
-@Service
+@Service("classService")
 public class ClassServiceImpl implements ClassService {
 
     @Autowired
     private ClassRepository classRepository;
     @Override
-    public Classs getById(Long id) {
+    public Classes getById(Long id) {
         if (classRepository.existsById(id)) {
             return classRepository.getReferenceById(id);
         }
@@ -27,7 +26,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<Classs> getAll() {
+    public List<Classes> getAll() {
         return classRepository.findAll();
     }
 
@@ -35,10 +34,10 @@ public class ClassServiceImpl implements ClassService {
     public ClassRequest add(ClassRequest request) {
         boolean check = (request.getName() != null);
         if (!check) {
-            throw new TeacherException("Fill in name");
+            throw new ClassException("Fill in name");
         }
-        Classs classs = new Classs(request.getName());
-        classRepository.saveAndFlush(classs);
+        Classes classes = new Classes(request.getName());
+        classRepository.saveAndFlush(classes);
         return request;
     }
 

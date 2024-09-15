@@ -15,12 +15,6 @@ import java.time.LocalDate;
 @Data
 public class RegisterSubject extends BaseEntity {
 
-    @Column(name="student_id")
-    private Long studentId;
-
-    @Column(name = "subject_id")
-    private Long subjectId;
-
     @Column(name = "register_date")
     private LocalDate date;
 
@@ -35,8 +29,7 @@ public class RegisterSubject extends BaseEntity {
     private Subject subject;
 
     public RegisterSubject(Long studentId, Long subjectId, LocalDate date) {
-        this.studentId=studentId;
-        this.subjectId=subjectId;
+
         this.date=date;
     }
 
