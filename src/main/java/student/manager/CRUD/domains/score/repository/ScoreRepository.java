@@ -7,9 +7,10 @@ import java.util.List;
 
 public interface ScoreRepository extends JpaRepository<Score,Long> {
 
+    Score getScoreById(Long id);
     boolean existsByStudentId(Long id);
     boolean existsBySubjectId(Long id);
     List<Score> findAllByStudentId(Long id);
     List<Score> findAllBySubjectId(Long id);
-    Score findByStudentIdAndSubjectId(Long studentId, Long subjectId);
+    boolean existsByStudentIdAndSubjectId(Long studentId, Long subjectId);
 }

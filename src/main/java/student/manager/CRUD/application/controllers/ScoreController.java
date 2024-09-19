@@ -6,10 +6,6 @@ import student.manager.CRUD.domains.score.model.entity.Score;
 import student.manager.CRUD.domains.score.model.request.ChangeScoreRequest;
 import student.manager.CRUD.domains.score.model.request.ScoreRequest;
 import student.manager.CRUD.domains.score.service.ScoreService;
-import student.manager.CRUD.domains.subject.model.entity.Subject;
-import student.manager.CRUD.domains.subject.model.request.ChangeSubjectRequest;
-import student.manager.CRUD.domains.subject.model.request.SubjectRequest;
-import student.manager.CRUD.domains.subject.service.SubjectService;
 
 import java.util.List;
 
@@ -20,6 +16,10 @@ public class ScoreController {
     @Autowired
     private ScoreService scoreService;
 
+    @GetMapping("/{id}")
+    public Score getById(@PathVariable Long id) {
+        return scoreService.getById(id);
+    }
     // get all score by student_id
     @GetMapping("/all/student/{id}")
     public List<Score> getAllByStudentId(@PathVariable Long id) {
@@ -34,13 +34,13 @@ public class ScoreController {
 
     // add
     @PostMapping("/add")
-    public Score add(@RequestBody ScoreRequest request) {
+    public String add(@RequestBody ScoreRequest request) {
         return scoreService.add(request);
     }
 
     @DeleteMapping("/delete")
-    public String delete(@RequestParam Long studentId, Long subjectId) {
-        return scoreService.deleteById(studentId,subjectId);
+    public String delete(@RequestParam Long id) {
+        return scoreService.deleteById(id);
     }
 
     @PutMapping("/changeInformation/{id}")

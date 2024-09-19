@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface RegisterSubjectRepository extends JpaRepository<RegisterSubject,Long> {
     boolean existsByStudentId(Long id);
-    List<RegisterSubject> findRegisterSubjectByStudentId(Long studentId);
+    RegisterSubject getRegisterSubjectById(Long id);
+    List<RegisterSubject> getAllByStudentId(Long id);
+
 }

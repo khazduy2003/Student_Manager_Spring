@@ -6,4 +6,5 @@ import student.manager.CRUD.domains.student.model.entity.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student,Long> {
+    Student getStudentById(Long id);
 }

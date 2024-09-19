@@ -1,8 +1,7 @@
 package student.manager.CRUD.domains.registersubject.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import student.manager.CRUD.application.base.BaseEntity;
 import student.manager.CRUD.domains.student.model.entity.Student;
 import student.manager.CRUD.domains.subject.model.entity.Subject;
@@ -13,24 +12,24 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "registersubject")
 @Data
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class RegisterSubject extends BaseEntity {
 
-    @Column(name = "register_date")
-    private LocalDate date;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "student_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
+    @NonNull
     private Student student;
 
-    @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false, referencedColumnName = "subject_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subject_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
+    @NonNull
     private Subject subject;
 
-    public RegisterSubject(Long studentId, Long subjectId, LocalDate date) {
-
-        this.date=date;
-    }
+    @Column(name = "register_date")
+    @NonNull
+    private LocalDate date;
 
 }

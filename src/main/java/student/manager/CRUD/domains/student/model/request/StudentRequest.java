@@ -2,13 +2,13 @@ package student.manager.CRUD.domains.student.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 public class StudentRequest {
     private String name;
-    private Date dob;
+    private LocalDate dob;
     private String address;
-
 }

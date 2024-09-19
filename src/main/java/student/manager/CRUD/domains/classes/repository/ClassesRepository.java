@@ -5,5 +5,7 @@ import org.springframework.stereotype.Repository;
 import student.manager.CRUD.domains.classes.model.entity.Classes;
 
 @Repository
-public interface ClassRepository extends JpaRepository<Classes, Long> {
+public interface ClassesRepository extends JpaRepository<Classes, Long> {
+    Classes getClassesById(Long id);
+    boolean existsByName(String name);
 }

@@ -1,8 +1,7 @@
 package student.manager.CRUD.domains.score.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import student.manager.CRUD.application.base.BaseEntity;
 import student.manager.CRUD.domains.student.model.entity.Student;
 import student.manager.CRUD.domains.subject.model.entity.Subject;
@@ -15,26 +14,28 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "score")
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Score extends BaseEntity {
 
-    @Column(name = "score")
-    private BigDecimal score;
-
-    @Column(name = "date_assessed")
-    private LocalDate date;
-
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "student_id")
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
+    @NonNull
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false,referencedColumnName = "subject_id")
+    @JoinColumn(name = "subject_id", nullable = false,referencedColumnName = "id")
     @JsonBackReference
+    @NonNull
     private Subject subject;
 
-    public Score(Long studentId, Long subjectId, BigDecimal score, LocalDate date) {
-        this.score=score;
-        this.date=date;
-    }
+    @Column(name = "score")
+    @NonNull
+    private BigDecimal score;
+
+    @Column(name = "date_assessed")
+    @NonNull
+    private LocalDate date;
+
 }

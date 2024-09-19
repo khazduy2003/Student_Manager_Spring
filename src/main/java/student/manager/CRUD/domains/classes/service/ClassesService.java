@@ -1,14 +1,13 @@
 package student.manager.CRUD.domains.classes.service;
 
-import org.springframework.stereotype.Component;
 import student.manager.CRUD.domains.classes.model.entity.Classes;
 import student.manager.CRUD.domains.classes.model.request.ChangeClassRequest;
 import student.manager.CRUD.domains.classes.model.request.ClassRequest;
 
 import java.util.List;
 
-@Component
-public interface ClassService {
+
+public interface ClassesService {
 
     Classes getById(Long id);
     List<Classes> getAll();

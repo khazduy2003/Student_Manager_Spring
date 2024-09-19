@@ -4,13 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import student.manager.CRUD.application.exceptions.RegisterSubjectException;
 import student.manager.CRUD.application.exceptions.ScoreException;
-import student.manager.CRUD.application.exceptions.TeacherException;
-import student.manager.CRUD.domains.registersubject.model.entity.RegisterSubject;
+import student.manager.CRUD.application.exceptions.StudentException;
 import student.manager.CRUD.domains.score.model.entity.Score;
 import student.manager.CRUD.domains.score.model.request.ChangeScoreRequest;
 import student.manager.CRUD.domains.score.model.request.ScoreRequest;
 import student.manager.CRUD.domains.score.repository.ScoreRepository;
 import student.manager.CRUD.domains.score.service.ScoreService;
+import student.manager.CRUD.domains.student.model.entity.Student;
+import student.manager.CRUD.domains.student.repository.StudentRepository;
+import student.manager.CRUD.domains.subject.model.entity.Subject;
+import student.manager.CRUD.domains.subject.repository.SubjectRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,9 +24,29 @@ public class ScoreServiceImpl implements ScoreService {
     @Autowired
     private ScoreRepository scoreRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Override
+    public Score getById(Long id) {
+
+        boolean check = scoreRepository.existsById(id);
+        if (check) {
+            return scoreRepository.getScoreById(id);
+        }
+        throw new ScoreException("ID has not exist");
+    }
+    @Override
+    public List<Score> getAll() {
+        return scoreRepository.findAll();
+    }
     @Override
     public List<Score> getAllByStudentId(Long id) {
-        if (scoreRepository.existsByStudentId(id)) {
+        boolean check = scoreRepository.existsByStudentId(id);
+        if (check) {
             return scoreRepository.findAllByStudentId(id);
         }
         throw new ScoreException("StudentID has not exist !");
@@ -31,93 +54,137 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public List<Score> getAllBySubjectId(Long id) {
-        if (scoreRepository.existsBySubjectId(id)) {
+        boolean check = scoreRepository.existsBySubjectId(id);
+        if (check) {
             return scoreRepository.findAllBySubjectId(id);
         }
         throw new ScoreException("SubjectID has not exist");
     }
 
     @Override
-    public Score add(ScoreRequest request) {
-        boolean checkStudent=true;
-        boolean checkSubject=true;
+    public String add(ScoreRequest request) {
+
+        boolean checkStudent;
+        boolean checkSubject = false;
         if (request.getSubjectId()==null && request.getStudentId()==null && request.getScore()==null) {
-            throw new RegisterSubjectException("Fill in SubjectID and StudentID");
+            throw new ScoreException("Fill in SubjectID, StudentID and Socre");
         }
         if (request.getStudentId()==null || request.getSubjectId()==null || request.getScore()==null) {
-            throw new RegisterSubjectException("Invalid SubjectID or StudentID");
+            throw new ScoreException("Invalid SubjectID StudentID or Score");
         }
 
-        if (scoreRepository.existsByStudentId(request.getStudentId())) {
-            checkStudent=false;
-        }
-//        if (!checkStudent) {
-//            List<Score> tempList = scoreRepository.findAllByStudentId(request.getStudentId());
-//            for (Score score : tempList) {
-//                if (score.getSubjectId().equals(request.getSubjectId())) {
-//                    checkSubject = false;
-//                    break;
-//                }
-//            }
-//        }
-        if (!checkSubject) {
-            throw new RegisterSubjectException("Duplicate StudentID and SubjectID");
+        if (!studentRepository.existsById(request.getStudentId())
+                || !subjectRepository.existsById(request.getSubjectId())) {
+            throw new StudentException("Student ID or Subject ID has not exist");
         }
 
+        checkStudent = scoreRepository.existsByStudentId(request.getStudentId());
+
+        if (checkStudent) {
+            List<Score> scoreRepositoryAllByStudentId = scoreRepository.findAllByStudentId(request.getStudentId());
+            for (Score score : scoreRepositoryAllByStudentId) {
+                if (score.getSubject().getId().equals(request.getSubjectId())) {
+                    checkSubject = true;
+                    break;
+                }
+            }
+            if (checkSubject) {
+                throw new RegisterSubjectException("Duplicate StudentId and SubjectId");
+            }
+        }
+
+        Student student = studentRepository.getStudentById(request.getStudentId());
+        Subject subject = subjectRepository.getSubjectById(request.getSubjectId());
         LocalDate today = LocalDate.now();
-        Score score = new Score(request.getStudentId(),request.getSubjectId(),request.getScore(),today);
+        Score score = new Score(student,subject,request.getScore(),today);
         scoreRepository.saveAndFlush(score);
-        return score;
+        return "Registered Success !";
     }
 
     @Override
-    public String deleteById(Long studentId, Long subjectId) {
-        boolean check=false;
-        if (studentId==null && subjectId==null) {
-            throw new ScoreException("Fill in StudentID and SubjectID");
-        }
-        if (studentId==null || subjectId==null) {
-            throw new ScoreException("Invalid StudentID or SubjectID");
-        }
+    public String deleteById(Long id) {
 
-//        for (Score score : scoreRepository.findAll()) {
-//            if (score.getStudentId().equals(studentId) && score.getSubjectId().equals(subjectId)) {
-//                check=true;
-//                break;
-//            }
-//        }
-        if (!check) {
-            throw new ScoreException("Incorrect StudentID or SubjectID");
+        boolean check = scoreRepository.existsById(id);
+        if (check) {
+            scoreRepository.deleteById(id);
+            scoreRepository.flush();
+            return "Deleted Success";
         }
-
-        Score score = scoreRepository.findByStudentIdAndSubjectId(studentId,subjectId);
-        scoreRepository.delete(score);
-        scoreRepository.flush();
-        return "Deleted Success";
+        else  {
+            throw new ScoreException("ID has not exits");
+        }
     }
 
     @Override
     public String changeInfo(Long id, ChangeScoreRequest request) {
-        boolean check=true;
-        boolean checkValid=true;
-        if ( request.getStudentId()== null && request.getSubjectId()==null && request.getScore()==null) {
-            check=false;
-        }
-        else if (request.getStudentId()== null || request.getSubjectId()==null || request.getScore()==null){
-            checkValid=false;
-        }
 
+        boolean check = scoreRepository.existsById(id);
         if (!check) {
-            throw new TeacherException("Fill in StudentID, SubjectID and Score");
-        }
-        if (!checkValid) {
-            throw new TeacherException("Invalid StudentID, SubjectID or Score");
+            throw new ScoreException("ID has not exist");
         }
 
-//        scoreRepository.getReferenceById(id).setStudentId(request.getNewStudentId());
-//        scoreRepository.getReferenceById(id).setSubjectId(request.getNewSubjectId());
-        scoreRepository.getReferenceById(id).setScore(request.getNewScore());
-        scoreRepository.flush();
-        return "Changed Information Success";
+        Score score = scoreRepository.getScoreById(id);
+
+        if (request.getScore()== null && request.getSubjectId()==null && request.getStudentId()==null) {
+            throw new StudentException("Fill in studentID, subjectID or Score");
+        }
+        if (request.getNewScore()== null && request.getNewSubjectId()==null && request.getNewStudentId()==null) {
+            throw new StudentException("Fill in NEW studentID, subjectID or Score");
+        }
+        if ((request.getStudentId()!=null && request.getNewStudentId()==null)
+                || (request.getSubjectId()!=null && request.getNewSubjectId()==null)
+                || (request.getScore()!=null && request.getNewScore()==null) ) {
+            throw new StudentException("Must fill in new studentID, new subjectID or new score");
+        }
+
+        if ((request.getNewStudentId()!=null && request.getStudentId()==null)
+                || (request.getNewSubjectId()!=null && request.getSubjectId()==null)
+                || (request.getNewScore()!=null && request.getScore()==null) ) {
+            throw new StudentException("Must fill in studentID, subjectID or score");
+        }
+
+        if ( (request.getStudentId()!=null && !request.getStudentId().equals(score.getStudent().getId()))
+                || (request.getSubjectId()!=null && !request.getSubjectId().equals(score.getSubject().getId()))
+                || (request.getScore()!=null && !request.getScore().equals(score.getScore())) ) {
+            throw new StudentException("Incorrect studentID, subjectID or score");
+        }
+
+
+        if ( (request.getScore()!=null && request.getScore().equals(request.getNewScore()))
+                || (request.getStudentId()!=null && request.getStudentId().equals(request.getNewStudentId()))
+                || (request.getSubjectId()!=null && request.getSubjectId().equals(request.getNewSubjectId())) ) {
+            throw new StudentException("Duplicate NEW StudentId, SubjectId or score");
+        }
+
+        boolean checkExist=false;
+        if (request.getNewStudentId()!=null && request.getNewSubjectId()!=null) {
+            checkExist = scoreRepository.existsByStudentIdAndSubjectId(request.getNewStudentId(),request.getNewSubjectId());
+        }
+        if (request.getNewStudentId() != null && request.getNewSubjectId()==null) {
+            checkExist=scoreRepository.existsByStudentIdAndSubjectId(request.getNewStudentId(),score.getSubject().getId());
+        }
+        if (request.getNewStudentId() == null && request.getNewSubjectId()!=null) {
+            checkExist=scoreRepository.existsByStudentIdAndSubjectId(score.getStudent().getId(), request.getNewSubjectId());
+        }
+
+        if (checkExist) {
+            throw new ScoreException("This student has score of this subject");
+        }
+
+        if (request.getStudentId()!=null) {
+            Student student = studentRepository.getStudentById(request.getNewStudentId());
+            score.setStudent(student);
+        }
+        if (request.getSubjectId()!=null) {
+            Subject subject = subjectRepository.getSubjectById(request.getNewSubjectId());
+            score.setSubject(subject);
+        }
+        if (request.getScore()!=null) {
+            score.setScore(request.getNewScore());
+        }
+
+        scoreRepository.saveAndFlush(score);
+
+        return "Change Information Success !";
     }
 }

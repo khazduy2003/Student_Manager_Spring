@@ -2,8 +2,7 @@ package student.manager.CRUD.domains.subject.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import student.manager.CRUD.application.base.BaseEntity;
 import student.manager.CRUD.domains.classes.model.entity.Classes;
 import student.manager.CRUD.domains.registersubject.model.entity.RegisterSubject;
@@ -17,14 +16,17 @@ import java.util.List;
 @Entity
 @Table(name = "subject")
 @Data
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class Subject extends BaseEntity {
 
     @Column(name = "name")
+    @NonNull
     private String name;
 
     @Column(name="credits")
+    @NonNull
     private Integer credits;
-
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -34,19 +36,16 @@ public class Subject extends BaseEntity {
     @JsonManagedReference
     private List<Score> scoreList;
 
-    @OneToOne
-    @JoinColumn(name = "class_id", nullable = false, referencedColumnName = "class_id")
+    @ManyToOne
+    @JoinColumn(name = "class_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
+    @NonNull
     private Classes classes;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false, referencedColumnName = "teacher_id")
+    @JoinColumn(name = "teacher_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
+    @NonNull
     private Teacher teacher;
-
-    public Subject (String name, Integer credits, Long teacherId, Long classId) {
-        this.name=name;
-        this.credits=credits;
-    }
 
 }
